@@ -1,0 +1,12 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.wallet-adapter-button-trigger {
+  background-color: transparent;
+  padding: 2px;
+}
+.wallet-adapter-button-trigger:hover {
+  background-color: transparent !important;
+  color: blanchedalmond;
+}
