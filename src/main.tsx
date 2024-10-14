@@ -16,9 +16,7 @@ createRoot(document.getElementById("root")!).render(
       <ConnectionProvider endpoint={import.meta.env.VITE_DEVNET_SERVER}>
         <WalletProvider wallets={[]} autoConnect>
           <WalletModalProvider>
-            <main className="min-h-screen dark text-foreground bg-background antialiased">
-              <App />
-            </main>
+            <App />
           </WalletModalProvider>
         </WalletProvider>
       </ConnectionProvider>
