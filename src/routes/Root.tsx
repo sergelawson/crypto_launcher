@@ -10,9 +10,32 @@ import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { PublicKey, SystemProgram, Transaction } from "@solana/web3.js";
 import { LuCoins, LuNavigation, LuArrowDown, LuX } from "react-icons/lu";
 import VisibleElement from "../components/VisibleElement";
-import { Input } from "@nextui-org/input";
+
 import FormModal from "../components/FormModal";
-import { Outlet } from "react-router-dom";
+import {
+  Navbar,
+  NavbarBrand,
+  NavbarContent,
+  NavbarItem,
+  NavbarMenuToggle,
+  NavbarMenu,
+  NavbarMenuItem,
+  Link,
+} from "@nextui-org/react";
+import CreateTokenForm from "../components/CreateTokenForm";
+
+const menuItems = [
+  "Profile",
+  "Dashboard",
+  "Activity",
+  "Analytics",
+  "System",
+  "Deployments",
+  "My Settings",
+  "Team Settings",
+  "Help & Feedback",
+  "Log Out",
+];
 
 function Root() {
   const { connection } = useConnection();
@@ -22,6 +45,7 @@ function Root() {
   const [showAirdropModal, setShowAirdropModal] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [showTokenForm, setShowTokenForm] = useState<boolean>(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const sendSOLTransaction = async (address: string, amount: number) => {
     setIsLoading(true);
@@ -93,12 +117,77 @@ function Root() {
 
   return (
     <main className="min-h-screen dark text-foreground bg-background antialiased">
+      <Navbar
+        isBordered
+        isMenuOpen={isMenuOpen}
+        onMenuOpenChange={setIsMenuOpen}
+      >
+        <NavbarContent className="sm:hidden" justify="start">
+          <NavbarMenuToggle
+            aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+          />
+        </NavbarContent>
+
+        <NavbarContent className="sm:hidden pr-3" justify="center">
+          <NavbarBrand>
+            <p className="font-bold text-inherit">CRYPTO LUNCHER</p>
+          </NavbarBrand>
+        </NavbarContent>
+        <NavbarContent className="hidden sm:flex gap-4" justify="center">
+          <NavbarBrand>
+            <p className="font-bold text-inherit"> CRYPTO LUNCHER</p>
+          </NavbarBrand>
+          {publicKey ? (
+            <>
+              <NavbarItem>
+                <Link color="foreground" href="#">
+                  Home
+                </Link>
+              </NavbarItem>
+              <NavbarItem>
+                <Link color="foreground" href="#">
+                  My Tokens
+                </Link>
+              </NavbarItem>
+              <NavbarItem>
+                <Link color="foreground" href="#">
+                  Swap
+                </Link>
+              </NavbarItem>
+            </>
+          ) : null}
+        </NavbarContent>
+
+        <NavbarContent justify="end">
+          <NavbarItem>
+            <WalletMultiButton />
+          </NavbarItem>
+        </NavbarContent>
+
+        <NavbarMenu>
+          {menuItems.map((item, index) => (
+            <NavbarMenuItem key={`${item}-${index}`}>
+              <Link
+                className="w-full"
+                color={
+                  index === 2
+                    ? "warning"
+                    : index === menuItems.length - 1
+                    ? "danger"
+                    : "foreground"
+                }
+                href="#"
+                size="lg"
+              >
+                {item}
+              </Link>
+            </NavbarMenuItem>
+          ))}
+        </NavbarMenu>
+      </Navbar>
       <div className="flex justify-center p-6">
         <div className="flex flex-col gap-y-5  w-[370px]">
-          <div className="flex justify-between gap-x-2">
-            <WalletMultiButton />
-            {publicKey ? <WalletDisconnectButton /> : null}
-          </div>
+          <div className="flex justify-between gap-x-2"></div>
           {publicKey ? (
             <p className="text-2xl font-bold">{(balance || 0) / 1e9} SOL</p>
           ) : null}
@@ -142,18 +231,9 @@ function Root() {
                     </div>
                   </div>
 
-                  <form className="flex flex-col gap-y-2">
-                    <Input label="Token Name" />
-                    <Input label="Symbol" />
-                    <Input label="Image URL" />
-                    <Input label="Initial Supply" />
-                    <Button
-                      onClick={() => setShowTokenForm(false)}
-                      color="primary"
-                    >
-                      Launch Token
-                    </Button>
-                  </form>
+                  <CreateTokenForm
+                    onSubmit={async () => setShowTokenForm(false)}
+                  />
                 </div>
               </VisibleElement>
             </div>

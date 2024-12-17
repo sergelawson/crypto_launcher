@@ -1,7 +1,7 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import App from "./App.tsx";
-// import { ChakraProvider } from "@chakra-ui/react";
+import { BrowserRouter } from "react-router";
 import {
   ConnectionProvider,
   WalletProvider,
@@ -16,7 +16,9 @@ createRoot(document.getElementById("root")!).render(
       <ConnectionProvider endpoint={import.meta.env.VITE_DEVNET_SERVER}>
         <WalletProvider wallets={[]} autoConnect>
           <WalletModalProvider>
-            <App />
+            <BrowserRouter>
+              <App />
+            </BrowserRouter>
           </WalletModalProvider>
         </WalletProvider>
       </ConnectionProvider>
